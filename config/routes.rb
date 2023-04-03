@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Defines the root path route ("/")
-  # root "articles#index"
+  post 'train-line', to: 'train_line#create'
+  post 'card', to: 'card#create'
+  post 'station/:name/enter', to: 'station#enter'
+  post 'station/:name/exit', to: 'station#exit'
+  get 'route', to: 'route#shortest_route'
 end
