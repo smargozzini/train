@@ -6,6 +6,7 @@
 #  name       :string           not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  fare       :decimal(5, 2)
 #
 class TrainLine < ApplicationRecord
   has_many :line_stations
