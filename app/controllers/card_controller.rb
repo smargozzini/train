@@ -3,8 +3,13 @@ class CardController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def create
-    card = Card.create!(card_params)
-    render json: card, status: :created
+    card = Card.find_by(number: params[:number])
+    if card
+      render json: { error: 'Card already exists' }, status: :bad_request
+    else
+      card = Card.create!(card_params)
+      render json: card, status: :created
+    end
   end
 
   private

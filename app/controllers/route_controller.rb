@@ -2,7 +2,8 @@
 class RouteController < ApplicationController
   def shortest_route
     route = get_route(origin, destination)
-    render json: route, status: :ok
+    render json: route, status: :ok if route
+    render json: { error: 'No route found' }, status: :not_found unless route
   end
 
   private
