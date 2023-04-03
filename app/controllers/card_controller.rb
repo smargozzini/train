@@ -1,0 +1,15 @@
+# define controller for train lines
+class CardController < ApplicationController
+  skip_before_action :verify_authenticity_token
+
+  def create
+    card = Card.create!(card_params)
+    render json: card, status: :created
+  end
+
+  private
+
+  def card_params
+    params.permit(:number, :amount)
+  end
+end
