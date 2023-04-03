@@ -5,7 +5,12 @@ class StationController < ApplicationController
     card = Card.find_by(number: params[:card_number])
     station = Station.find_by(name: params[:name])
     if card && station
-      update_card_funds(card, station)
+      if Ride.where(card: card, destination: nil).any?
+        render json: { error: 'Ride in progress' }, status: :bad_request
+      else
+        Ride.create!(card: card, origin: station)
+        update_card_funds(card, station)
+      end
     else
       render json: { error: 'Card or station not found' }, status: :not_found
     end
@@ -13,7 +18,14 @@ class StationController < ApplicationController
 
   def exit
     card = Card.find_by(number: params[:card_number])
-    render json: card, status: :ok
+    station = Station.find_by(name: params[:name])
+    ride = Ride.where(card: card, destination: nil).first
+    if ride.present?
+      ride.update(destination: station)
+      render json: card, status: :ok
+    else
+      render json: { error: 'No ride in progress' }, status: :bad_request
+    end
   end
 
   private
