@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_03_153758) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_03_160412) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -34,6 +34,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_03_153758) do
     t.index ["train_line_id"], name: "index_line_stations_on_train_line_id"
   end
 
+  create_table "rides", force: :cascade do |t|
+    t.bigint "origin_id"
+    t.bigint "destination_id"
+    t.bigint "card_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["card_id"], name: "index_rides_on_card_id"
+    t.index ["destination_id"], name: "index_rides_on_destination_id"
+    t.index ["origin_id"], name: "index_rides_on_origin_id"
+  end
+
   create_table "stations", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
@@ -51,4 +62,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_03_153758) do
   add_foreign_key "line_stations", "stations", column: "next_station_id"
   add_foreign_key "line_stations", "stations", column: "previous_station_id"
   add_foreign_key "line_stations", "train_lines"
+  add_foreign_key "rides", "cards"
+  add_foreign_key "rides", "stations", column: "destination_id"
+  add_foreign_key "rides", "stations", column: "origin_id"
 end
